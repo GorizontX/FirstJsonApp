@@ -5,17 +5,17 @@
 //  Created by Andrey Machulin on 14.05.2023.
 //
 
-struct Weather: Codable {
+struct Weather: Decodable {
     let location: Location
     let current: Current
 }
 
-struct Location: Codable {
+struct Location: Decodable {
     let name: String
     let country: String
 }
 
-struct Current: Codable {
-    let temperature: Double
+struct Current: Decodable {
+    let temperature: Int
     let weather_descriptions: [String]
 }
