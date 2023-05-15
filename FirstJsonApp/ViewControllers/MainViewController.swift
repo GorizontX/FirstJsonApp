@@ -8,15 +8,17 @@
 import UIKit
 
 enum Link: String {
-    case newYorkURL = "https://api.weatherapi.com/v1/current.json?key=4588851614d64e558cf225001231405&q=New York&aqi=no"
+    case parisURL = "http://api.weatherapi.com/v1/current.json?key=4588851614d64e558cf225001231405&q=Paris&aqi=no"
     case moscowURL = "https://api.weatherapi.com/v1/current.json?key=4588851614d64e558cf225001231405&q=Moscow&aqi=no"
     case barcelonaURL = "https://api.weatherapi.com/v1/current.json?key=4588851614d64e558cf225001231405&q=Barcelona&aqi=yes"
+    case londonURL = "http://api.weatherapi.com/v1/current.json?key=4588851614d64e558cf225001231405&q=London&aqi=no"
 }
 
 enum City: String, CaseIterable {
-    case newYork = "New York"
+    case paris = "Paris"
     case moscow = "Moscow"
     case barcelona = "Barcelona"
+    case london = "London"
 }
 
 class MainViewController: UICollectionViewController {
@@ -43,9 +45,10 @@ class MainViewController: UICollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedCity = cities[indexPath.item]
         switch selectedCity {
-        case .newYork: fetchNewYork()
+        case .paris: fetchParis()
         case .moscow: fetchMoscow()
         case .barcelona: fetchBarcelona()
+        case .london: fetchLondon()
         }
     }
     // MARK: - Private Methods
@@ -90,8 +93,8 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
 }
 
 extension MainViewController {
-    private func fetchNewYork() {
-        guard let url = URL(string: Link.newYorkURL.rawValue) else { return }
+    private func fetchParis() {
+        guard let url = URL(string: Link.parisURL.rawValue) else { return }
         
         URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
             guard let data = data else {
@@ -137,6 +140,28 @@ extension MainViewController {
     
     private func fetchBarcelona() {
         guard let url = URL(string: Link.barcelonaURL.rawValue) else { return }
+        
+        URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
+            guard let data = data else {
+                print(error?.localizedDescription ?? "No error description")
+                return
+            }
+            
+            do {
+                let city = try JSONDecoder().decode(Weather.self, from: data)
+                self?.successAlert()
+                print(city)
+            } catch let error {
+                self?.failedAlert()
+                print(error)
+            }
+            
+            
+        }.resume()
+    }
+    
+    private func fetchLondon() {
+        guard let url = URL(string: Link.londonURL.rawValue) else { return }
         
         URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
             guard let data = data else {
