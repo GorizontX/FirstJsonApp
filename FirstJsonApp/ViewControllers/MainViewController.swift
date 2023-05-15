@@ -38,6 +38,23 @@ class MainViewController: UICollectionViewController {
         }
         cell.userActionLabel.text = cities[indexPath.item].rawValue
         
+        let city = cities[indexPath.item]
+        switch city {
+        case .paris:
+            let parisImage = UIImage(named: "paris")
+            cell.backgroundView = UIImageView(image: parisImage)
+        case .moscow:
+            let moscowImage = UIImage(named: "moscow")
+            cell.backgroundView = UIImageView(image: moscowImage)
+        case .barcelona:
+            let barcelonaImage = UIImage(named: "barcelona")
+            cell.backgroundView = UIImageView(image: barcelonaImage)
+        case .london:
+            let londonImage = UIImage(named: "london")
+            cell.backgroundView = UIImageView(image: londonImage)
+        }
+        
+        
         return cell
     }
     
@@ -80,7 +97,7 @@ class MainViewController: UICollectionViewController {
         }
     } 
 }
-    
+
 
 // MARK: - UICollectionViewDelegateFlowLayout
 extension MainViewController: UICollectionViewDelegateFlowLayout {
@@ -91,7 +108,7 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
     }
     
 }
-
+// MARK: - Networing
 extension MainViewController {
     private func fetchParis() {
         guard let url = URL(string: Link.parisURL.rawValue) else { return }
@@ -113,7 +130,6 @@ extension MainViewController {
             
             
         }.resume()
-                
     }
     
     private func fetchMoscow() {
