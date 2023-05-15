@@ -84,7 +84,7 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        CGSize(width: UIScreen.main.bounds.width - 48, height: 100)
+        CGSize(width: UIScreen.main.bounds.width - 36, height: 100)
     }
     
 }
@@ -100,7 +100,7 @@ extension MainViewController {
             }
             
             do {
-                let city = try JSONDecoder().decode([Weather].self, from: data)
+                let city = try JSONDecoder().decode(Weather.self, from: data)
                 self?.successAlert()
                 print(city)
             } catch let error {
@@ -114,7 +114,25 @@ extension MainViewController {
     }
     
     private func fetchMoscow() {
+        guard let url = URL(string: Link.moscowURL.rawValue) else { return }
         
+        URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
+            guard let data = data else {
+                print(error?.localizedDescription ?? "No error description")
+                return
+            }
+            
+            do {
+                let city = try JSONDecoder().decode(Weather.self, from: data)
+                self?.successAlert()
+                print(city)
+            } catch let error {
+                self?.failedAlert()
+                print(error)
+            }
+            
+            
+        }.resume()
     }
     
     private func fetchBarcelona() {
@@ -127,7 +145,7 @@ extension MainViewController {
             }
             
             do {
-                let city = try JSONDecoder().decode([Weather].self, from: data)
+                let city = try JSONDecoder().decode(Weather.self, from: data)
                 self?.successAlert()
                 print(city)
             } catch let error {
