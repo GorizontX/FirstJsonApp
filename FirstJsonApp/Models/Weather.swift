@@ -12,10 +12,11 @@ struct Weather: Decodable {
 
 struct Location: Decodable {
     let name: String
+    let region: String
     let country: String
+    let localtime: String
 }
 
 struct Current: Decodable {
-    let temperature: Int
-    let weather_descriptions: [String]
+    let temp_c: Int
 }

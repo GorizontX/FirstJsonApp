@@ -8,7 +8,9 @@
 import UIKit
 
 enum Link: String {
-    case newYorkURL = "http://api.weatherstack.com/current?access_key=516e93fe73312d8b46a1f4f40a2b78c7&query=New%20York"
+    case newYorkURL = "https://api.weatherapi.com/v1/current.json?key=4588851614d64e558cf225001231405&q=New York&aqi=no"
+    case moscowURL = "https://api.weatherapi.com/v1/current.json?key=4588851614d64e558cf225001231405&q=Moscow&aqi=no"
+    case barcelonaURL = "https://api.weatherapi.com/v1/current.json?key=4588851614d64e558cf225001231405&q=Barcelona&aqi=yes"
 }
 
 enum City: String, CaseIterable {
@@ -116,6 +118,24 @@ extension MainViewController {
     }
     
     private func fetchBarcelona() {
+        guard let url = URL(string: Link.barcelonaURL.rawValue) else { return }
         
+        URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
+            guard let data = data else {
+                print(error?.localizedDescription ?? "No error description")
+                return
+            }
+            
+            do {
+                let city = try JSONDecoder().decode([Weather].self, from: data)
+                self?.successAlert()
+                print(city)
+            } catch let error {
+                self?.failedAlert()
+                print(error)
+            }
+            
+            
+        }.resume()
     }
 }
